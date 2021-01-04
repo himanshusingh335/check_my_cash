@@ -1,11 +1,14 @@
+import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/screens/Edit_Budget.dart';
 import 'package:check_my_cash/screens/Home_Screen.dart';
 import 'package:check_my_cash/screens/New_Spending.dart';
 import 'package:check_my_cash/screens/Transaction_History.dart';
 import 'package:check_my_cash/screens/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(CheckMyCash());
 }
 
