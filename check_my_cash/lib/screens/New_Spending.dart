@@ -1,6 +1,12 @@
 import 'package:check_my_cash/backend/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:check_my_cash/backend/DataBaseServices.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:async';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+var K = new DatabaseServices();
 
 class NewSpendingScreen extends StatefulWidget {
   @override
@@ -111,13 +117,10 @@ class _NewSpendingScreenState extends State<NewSpendingScreen> {
               child: Text("ADD"),
               onPressed: () {
                 var t = new Transactions(
-                    id: id,
+                    id: int.parse(id.text),
                     transactionAmnt: int.parse(amount.text),
-                    transactionDate: date.toString(),
-                    reason: reason.toString());
-
-                var K = new DatabaseServices();
-                K.initializeDb();
+                    transactionDate: date.text,
+                    reason: reason.text);
                 K.addTransaction(t);
               }),
         ],

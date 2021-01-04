@@ -11,7 +11,7 @@ class TransactionHistoryScreen extends StatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  Future<List> f;
+  Future<List> f=K.getTransactions();
 
   @override
   void initState() {
@@ -38,14 +38,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData)
             return ListView.builder(
-              itemCount: snapshot.data,
+              itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int position) {
                 return Card(
                   color: Colors.white,
                   elevation: 2.0,
                   child: ListTile(
-                    title: Text('hello'),
-                    subtitle: Text('hello'),
+                    title: Text('Rs ' + snapshot.data[position].transactionAmnt.toString()),
+                    subtitle: Text(snapshot.data[position].),
                     onTap: () {},
                   ),
                 );

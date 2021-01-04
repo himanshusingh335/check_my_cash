@@ -5,13 +5,22 @@ import 'package:path_provider/path_provider.dart';
 import 'transactions.dart';
 
 class DatabaseServices {
-  Database database;
+  static Database _database;
 
+  Future<Database> get database async{
+    if(_database==null)
+      {
+        _database= await initializeDb();
+      }
+    return _database;
+  }
   Future<Database> initializeDb() async {
-    Directory dir = await getApplicationDocumentsDirectory();
-    String path = dir.path + "transactions_table.db";
-    database = await openDatabase(path, version: 1, onCreate: createDb);
-    return database;
+        Directory dir = await getApplicationDocumentsDirectory();
+        String path = dir.path + "transactions_table.db";
+        print('BEFORE openDatabase');
+        _database = await openDatabase(path, version: 1, onCreate: createDb);
+        print('AFTER openDatabase');
+        return _database;
   }
 
   void createDb(Database db, int newVersion) async {
@@ -20,20 +29,13 @@ class DatabaseServices {
   }
 
   Future<void> addTransaction(Transactions transaction) async {
-    // Get a reference to the database.
-    if (database == null) {
-      createDb(database, 1);
-    }
-    final Database db = database;
+    // Get a reference to the database
+    final Database db = await database;
 
     // Insert the Dog into the correct table. You might also specify the
     // `conflictAlgorithm` to use in case the same dog is inserted twice.
     //
     // In this case, replace any previous data.
-    if (db == null) {
-      print(
-          "AAAAAAAAAAAAAAAAAAA NO DATABASE HAS BEEN MADE AAAAAAAAAAAAAAAAAAAA");
-    }
     await db.insert(
       'transactions',
       transaction.toMap(),
@@ -43,7 +45,7 @@ class DatabaseServices {
 
   Future<List<Transactions>> getTransactions() async {
     // Get a reference to the database.
-    final Database db = database;
+    final Database db = await database;
 
     // Query the table for all The Transactions.
     final List<Map<String, dynamic>> maps = await db.query('transactions');
@@ -61,7 +63,7 @@ class DatabaseServices {
 
   Future<void> updateTransaction(Transactions transaction) async {
     // Get a reference to the database.
-    final db = database;
+    final Database db = await database;
 
     // Update the given Transaction.
     await db.update(
@@ -76,7 +78,7 @@ class DatabaseServices {
 
   Future<void> deleteTransaction(int id) async {
     // Get a reference to the database.
-    final db = database;
+    final Database db = await database;
 
     // Remove the Transaction from the Database.
     await db.delete(
