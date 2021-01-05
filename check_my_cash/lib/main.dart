@@ -1,7 +1,5 @@
-import 'package:check_my_cash/backend/DataBaseServices.dart';
-import 'package:check_my_cash/screens/Edit_Budget.dart';
 import 'package:check_my_cash/screens/Home_Screen.dart';
-import 'package:check_my_cash/screens/New_Spending.dart';
+import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:check_my_cash/screens/Transaction_History.dart';
 import 'package:check_my_cash/screens/settings.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +24,8 @@ class CheckMyCash extends StatelessWidget {
       initialRoute: '/home',
       routes: {
         '/home': (context) => HomeScreen(),
-        '/new': (context) => NewSpendingScreen(),
+        '/new': (context) => NewTransactionScreen(),
         '/history': (context) => TransactionHistoryScreen(),
-        '/edit': (context) => EditBudgetScreen(),
         '/settings': (context) => SettingsScreen(),
       },
     );

@@ -7,6 +7,9 @@ class Transactions {
   Transactions(
       {this.transactionDate, this.transactionAmnt, this.reason, this.id});
 
+  Transactions.withoutid(
+      {this.transactionDate, this.transactionAmnt, this.reason});
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

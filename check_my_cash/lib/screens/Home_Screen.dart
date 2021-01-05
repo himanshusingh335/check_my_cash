@@ -51,13 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Edit Budget'),
-              onTap: () {
-                Navigator.pushNamed(context, '/edit');
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.history),
               title: Text('Transaction History'),
               onTap: () {

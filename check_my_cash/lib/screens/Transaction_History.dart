@@ -1,8 +1,8 @@
-import 'package:check_my_cash/backend/transactions.dart';
-import 'package:check_my_cash/screens/New_Spending.dart';
+import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:check_my_cash/backend/BudgetClass.dart';
-import 'package:check_my_cash/backend/DataBaseServices.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
+Future<List> transactionList;
 
 class TransactionHistoryScreen extends StatefulWidget {
   @override
@@ -11,12 +11,10 @@ class TransactionHistoryScreen extends StatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  Future<List> f=K.getTransactions();
-
   @override
   void initState() {
     super.initState();
-    setState(() {});
+    transactionList = databaseServices.getTransactions();
   }
 
   @override
@@ -34,20 +32,54 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         iconTheme: IconThemeData(color: Colors.black),
       ),
       body: FutureBuilder(
-        future: f,
+        future: transactionList,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData)
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int position) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 2.0,
-                  child: ListTile(
-                    title: Text('Rs ' + snapshot.data[position].transactionAmnt.toString()),
-                    subtitle: Text(snapshot.data[position].),
-                    onTap: () {},
+                return Slidable(
+                  actionPane: SlidableDrawerActionPane(),
+                  actionExtentRatio: 0.25,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 2.0,
+                    child: ListTile(
+                      title: Text('Rs ' +
+                          snapshot.data[position].transactionAmnt.toString()),
+                      subtitle: Text(snapshot.data[position].reason.toString()),
+                      trailing: Text(
+                          snapshot.data[position].transactionDate.toString()),
+                    ),
                   ),
+                  actions: <Widget>[
+                    IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () {
+                          databaseServices.deleteTransaction(
+                              int.parse(snapshot.data[position].id.toString()));
+                          setState(() {
+                            transactionList =
+                                databaseServices.getTransactions();
+                          });
+                        }),
+                  ],
+                  secondaryActions: <Widget>[
+                    IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () {
+                          databaseServices.deleteTransaction(
+                              int.parse(snapshot.data[position].id.toString()));
+                          setState(() {
+                            transactionList =
+                                databaseServices.getTransactions();
+                          });
+                        }),
+                  ],
                 );
               },
             );

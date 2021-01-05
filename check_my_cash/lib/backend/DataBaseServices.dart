@@ -7,20 +7,18 @@ import 'transactions.dart';
 class DatabaseServices {
   static Database _database;
 
-  Future<Database> get database async{
-    if(_database==null)
-      {
-        _database= await initializeDb();
-      }
+  Future<Database> get database async {
+    if (_database == null) {
+      _database = await initializeDb();
+    }
     return _database;
   }
+
   Future<Database> initializeDb() async {
-        Directory dir = await getApplicationDocumentsDirectory();
-        String path = dir.path + "transactions_table.db";
-        print('BEFORE openDatabase');
-        _database = await openDatabase(path, version: 1, onCreate: createDb);
-        print('AFTER openDatabase');
-        return _database;
+    Directory dir = await getApplicationDocumentsDirectory();
+    String path = dir.path + "transactions_table.db";
+    _database = await openDatabase(path, version: 1, onCreate: createDb);
+    return _database;
   }
 
   void createDb(Database db, int newVersion) async {
@@ -32,7 +30,7 @@ class DatabaseServices {
     // Get a reference to the database
     final Database db = await database;
 
-    // Insert the Dog into the correct table. You might also specify the
+    // Insert the Transactions into the correct table. You might also specify the
     // `conflictAlgorithm` to use in case the same dog is inserted twice.
     //
     // In this case, replace any previous data.
