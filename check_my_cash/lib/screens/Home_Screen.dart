@@ -1,4 +1,7 @@
+import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:flutter/material.dart';
+
+Future<List> balance;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -6,6 +9,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    balance = databaseServices.calculateBalance();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +76,32 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Text('This is the Home page'),
+      body: FutureBuilder(
+        future: balance,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData)
+            return Card(
+              color: Colors.white,
+              elevation: 2.0,
+              child: ListTile(
+                title: Text(
+                  'Balance Amount: Rs ' +
+                      snapshot.data[0].values
+                          .toString()
+                          .replaceAll('(', '')
+                          .replaceAll(')', ''),
+                  style: TextStyle(
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            );
+          else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          } // By default, show a loading spinner.
+          return Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }

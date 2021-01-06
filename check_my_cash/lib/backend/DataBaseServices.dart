@@ -87,4 +87,11 @@ class DatabaseServices {
       whereArgs: [id],
     );
   }
+
+  Future<List<Map>> calculateBalance() async {
+    final Database db = await database;
+
+    var balance = await db.rawQuery("SELECT SUM(amount) FROM transactions");
+    return balance;
+  }
 }

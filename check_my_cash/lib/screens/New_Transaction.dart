@@ -120,7 +120,9 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
               child: Text("ADD"),
               onPressed: () {
                 var transaction = new Transactions.withoutid(
-                    transactionAmnt: int.parse(amount.text),
+                    transactionAmnt: transactionType == TransactionType.debit
+                        ? int.parse('-' + amount.text)
+                        : int.parse(amount.text),
                     transactionDate: DateTime.now().day.toString() +
                         '/' +
                         DateTime.now().month.toString() +
@@ -131,6 +133,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                 amount.text = "";
                 reason.text = "";
                 Navigator.pushNamed(context, '/history');
+                databaseServices.calculateBalance();
               }),
         ],
       ),

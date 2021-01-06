@@ -45,8 +45,17 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     color: Colors.white,
                     elevation: 2.0,
                     child: ListTile(
-                      title: Text('Rs ' +
-                          snapshot.data[position].transactionAmnt.toString()),
+                      title: Text(
+                        'Rs ' +
+                            snapshot.data[position].transactionAmnt.toString(),
+                        style: TextStyle(
+                          color: snapshot.data[position].transactionAmnt
+                                  .toString()
+                                  .contains('-')
+                              ? Colors.red
+                              : Colors.green,
+                        ),
+                      ),
                       subtitle: Text(snapshot.data[position].reason.toString()),
                       trailing: Text(
                           snapshot.data[position].transactionDate.toString()),
