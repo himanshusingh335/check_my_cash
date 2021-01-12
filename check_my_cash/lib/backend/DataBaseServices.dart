@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'transactions.dart';
 
-class DatabaseServices {
+class DatabaseServices extends ChangeNotifier {
   static Database _database;
 
   Future<Database> get database async {
@@ -47,7 +48,6 @@ class DatabaseServices {
 
     // Query the table for all The Transactions.
     final List<Map<String, dynamic>> maps = await db.query('transactions');
-
     // Convert the List<Map<String, dynamic> into a List<Transactions>.
     return List.generate(maps.length, (i) {
       return Transactions(
@@ -92,6 +92,27 @@ class DatabaseServices {
     final Database db = await database;
 
     var balance = await db.rawQuery("SELECT SUM(amount) FROM transactions");
+    notifyListeners();
     return balance;
+  }
+
+  Future<List<Map>> calculateCredit() async {
+    final Database db = await database;
+
+    var credit = await db
+        .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount>0");
+    notifyListeners();
+
+    return credit;
+  }
+
+  Future<List<Map>> calculateDebit() async {
+    final Database db = await database;
+
+    var debit = await db
+        .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount<0");
+    notifyListeners();
+
+    return debit;
   }
 }

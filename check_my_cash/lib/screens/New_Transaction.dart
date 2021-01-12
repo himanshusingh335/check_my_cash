@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/backend/transactions.dart';
+import 'package:check_my_cash/screens/Home_Screen.dart';
 
 var databaseServices = new DatabaseServices();
 TextEditingController amount;
@@ -133,7 +134,6 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                 amount.text = "";
                 reason.text = "";
                 Navigator.pushNamed(context, '/history');
-                databaseServices.calculateBalance();
               }),
         ],
       ),

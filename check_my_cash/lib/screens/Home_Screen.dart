@@ -1,7 +1,10 @@
+import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 Future<List> balance;
+var updateBalance;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,14 +12,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool balanceLoaded = false;
   @override
   void initState() {
-    balance = databaseServices.calculateBalance();
     super.initState();
+    balance = databaseServices.calculateBalance();
   }
+
+  /*void didChangeDependencies() {
+    if (!balanceLoaded) {
+      balance = updateBalance.calculateBalance();
+      balanceLoaded = true;
+    }
+    super.didChangeDependencies();
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    //updateBalance = context.watch<DatabaseServices>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -79,22 +92,58 @@ class _HomeScreenState extends State<HomeScreen> {
       body: FutureBuilder(
         future: balance,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData)
-            return Card(
-              color: Colors.white,
-              elevation: 2.0,
-              child: ListTile(
-                title: Text(
-                  'Balance Amount: Rs ' +
-                      snapshot.data[0].values
-                          .toString()
-                          .replaceAll('(', '')
-                          .replaceAll(')', ''),
-                  style: TextStyle(
-                    color: Colors.green,
+          if (snapshot.connectionState == ConnectionState.done)
+            return Column(
+              children: <Widget>[
+                Card(
+                  color: Colors.white,
+                  elevation: 2.0,
+                  child: ListTile(
+                    title: Text(
+                      'Balance Amount: Rs ' +
+                          snapshot.data[0].values
+                              .toString()
+                              .replaceAll('(', '')
+                              .replaceAll(')', ''),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                /*Card(
+                  color: Colors.white,
+                  elevation: 2.0,
+                  child: ListTile(
+                    title: Text(
+                      'Credit Amount: Rs ' +
+                          snapshot.data[1].values
+                              .toString()
+                              .replaceAll('(', '')
+                              .replaceAll(')', ''),
+                      style: TextStyle(
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.white,
+                  elevation: 2.0,
+                  child: ListTile(
+                    title: Text(
+                      'Debit Amount: Rs ' +
+                          snapshot.data[2].values
+                              .toString()
+                              .replaceAll('(', '')
+                              .replaceAll(')', ''),
+                      style: TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),*/
+              ],
             );
           else if (snapshot.hasError) {
             return Text("${snapshot.error}");
