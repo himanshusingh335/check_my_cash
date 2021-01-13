@@ -89,7 +89,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0)),
               ),
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
             ),
           ),
           Padding(
@@ -131,6 +131,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                         DateTime.now().year.toString(),
                     reason: reason.text);
                 databaseServices.addTransaction(transaction);
+                balance = updateBalance.getHomePageValues();
                 amount.text = "";
                 reason.text = "";
                 Navigator.pushNamed(context, '/history');
@@ -138,5 +139,12 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    amount.dispose();
+    reason.dispose();
+    super.dispose();
   }
 }

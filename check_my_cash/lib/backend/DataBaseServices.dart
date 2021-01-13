@@ -88,31 +88,40 @@ class DatabaseServices extends ChangeNotifier {
     );
   }
 
-  Future<List<Map>> calculateBalance() async {
+  Future<String> calculateBalance() async {
     final Database db = await database;
 
     var balance = await db.rawQuery("SELECT SUM(amount) FROM transactions");
-    notifyListeners();
-    return balance;
+    //notifyListeners();
+    return balance[0].values.toString();
   }
 
-  Future<List<Map>> calculateCredit() async {
+  Future<String> calculateCredit() async {
     final Database db = await database;
 
     var credit = await db
         .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount>0");
-    notifyListeners();
+    //notifyListeners();
 
-    return credit;
+    return credit[0].values.toString();
   }
 
-  Future<List<Map>> calculateDebit() async {
+  Future<String> calculateDebit() async {
     final Database db = await database;
 
     var debit = await db
         .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount<0");
-    notifyListeners();
+    //notifyListeners();
 
-    return debit;
+    return debit[0].values.toString();
+  }
+
+  Future getHomePageValues() async {
+    var values = new List();
+    values.add(await calculateBalance());
+    values.add(await calculateCredit());
+    values.add(await calculateDebit());
+    notifyListeners();
+    return values;
   }
 }

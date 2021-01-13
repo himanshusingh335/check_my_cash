@@ -10,31 +10,31 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => DatabaseServices(),
-      child: CheckMyCash(),
-    ),
+    CheckMyCash(),
   );
 }
 
 class CheckMyCash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        brightness: Brightness.light,
+    return ChangeNotifierProvider(
+      create: (context) => DatabaseServices(),
+      child: MaterialApp(
+        theme: ThemeData(
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+        ),
+        title: "Check My Cash",
+        initialRoute: '/home',
+        routes: {
+          '/home': (context) => HomeScreen(),
+          '/new': (context) => NewTransactionScreen(),
+          '/history': (context) => TransactionHistoryScreen(),
+          '/settings': (context) => SettingsScreen(),
+        },
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-      ),
-      title: "Check My Cash",
-      initialRoute: '/home',
-      routes: {
-        '/home': (context) => HomeScreen(),
-        '/new': (context) => NewTransactionScreen(),
-        '/history': (context) => TransactionHistoryScreen(),
-        '/settings': (context) => SettingsScreen(),
-      },
     );
   }
 }

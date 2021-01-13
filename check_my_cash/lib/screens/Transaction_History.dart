@@ -1,3 +1,4 @@
+import 'package:check_my_cash/screens/Home_Screen.dart';
 import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -69,6 +70,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         onTap: () {
                           databaseServices.deleteTransaction(
                               int.parse(snapshot.data[position].id.toString()));
+                          balance = updateBalance.getHomePageValues();
                           setState(() {
                             transactionList =
                                 databaseServices.getTransactions();
@@ -83,6 +85,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         onTap: () {
                           databaseServices.deleteTransaction(
                               int.parse(snapshot.data[position].id.toString()));
+                          balance = updateBalance.getHomePageValues();
                           setState(() {
                             transactionList =
                                 databaseServices.getTransactions();

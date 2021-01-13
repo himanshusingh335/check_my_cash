@@ -3,7 +3,7 @@ import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-Future<List> balance;
+Future balance;
 var updateBalance;
 
 class HomeScreen extends StatefulWidget {
@@ -12,24 +12,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool balanceLoaded = false;
   @override
   void initState() {
     super.initState();
-    balance = databaseServices.calculateBalance();
+    balance = databaseServices.getHomePageValues();
   }
 
-  /*void didChangeDependencies() {
-    if (!balanceLoaded) {
-      balance = updateBalance.calculateBalance();
-      balanceLoaded = true;
-    }
+  void didChangeDependencies() {
+    updateBalance = Provider.of<DatabaseServices>(context);
     super.didChangeDependencies();
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
-    //updateBalance = context.watch<DatabaseServices>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -93,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         future: balance,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done)
-            return Column(
+            return ListView(
               children: <Widget>[
                 Card(
                   color: Colors.white,
@@ -101,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListTile(
                     title: Text(
                       'Balance Amount: Rs ' +
-                          snapshot.data[0].values
+                          snapshot.data[0]
                               .toString()
                               .replaceAll('(', '')
                               .replaceAll(')', ''),
@@ -111,13 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                /*Card(
+                Card(
                   color: Colors.white,
                   elevation: 2.0,
                   child: ListTile(
                     title: Text(
                       'Credit Amount: Rs ' +
-                          snapshot.data[1].values
+                          snapshot.data[1]
                               .toString()
                               .replaceAll('(', '')
                               .replaceAll(')', ''),
@@ -133,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListTile(
                     title: Text(
                       'Debit Amount: Rs ' +
-                          snapshot.data[2].values
+                          snapshot.data[2]
                               .toString()
                               .replaceAll('(', '')
                               .replaceAll(')', ''),
@@ -142,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                ),*/
+                ),
               ],
             );
           else if (snapshot.hasError) {
