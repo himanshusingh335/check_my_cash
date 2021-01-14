@@ -42,7 +42,7 @@ class DatabaseServices extends ChangeNotifier {
     );
   }
 
-  Future<List<Transactions>> getTransactions() async {
+  /*Future<List<Transactions>> getTransactions() async {
     // Get a reference to the database.
     final Database db = await database;
 
@@ -57,9 +57,27 @@ class DatabaseServices extends ChangeNotifier {
         reason: maps[i]['reason'],
       );
     });
+  }*/
+
+  Future<List<Transactions>> getTransactionsByDate(String date) async {
+    // Get a reference to the database.
+    final Database db = await database;
+
+    // Query the table for all The Transactions.
+    final List<Map<String, dynamic>> maps =
+        await db.rawQuery("SELECT * FROM transactions WHERE date='$date'");
+    // Convert the List<Map<String, dynamic> into a List<Transactions>.
+    return List.generate(maps.length, (i) {
+      return Transactions(
+        id: maps[i]['id'],
+        transactionDate: maps[i]['date'],
+        transactionAmnt: maps[i]['amount'],
+        reason: maps[i]['reason'],
+      );
+    });
   }
 
-  Future<void> updateTransaction(Transactions transaction) async {
+  /*Future<void> updateTransaction(Transactions transaction) async {
     // Get a reference to the database.
     final Database db = await database;
 
@@ -72,7 +90,7 @@ class DatabaseServices extends ChangeNotifier {
       // Pass the Transaction's id as a whereArg to prevent SQL injection.
       whereArgs: [transaction.id],
     );
-  }
+  }*/
 
   Future<void> deleteTransaction(int id) async {
     // Get a reference to the database.
@@ -92,35 +110,60 @@ class DatabaseServices extends ChangeNotifier {
     final Database db = await database;
 
     var balance = await db.rawQuery("SELECT SUM(amount) FROM transactions");
-    //notifyListeners();
+
     return balance[0].values.toString();
   }
 
-  Future<String> calculateCredit() async {
+  Future<String> calculateTotalCredit() async {
     final Database db = await database;
 
     var credit = await db
         .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount>0");
-    //notifyListeners();
 
     return credit[0].values.toString();
   }
 
-  Future<String> calculateDebit() async {
+  Future<String> calculateTotalDebit() async {
     final Database db = await database;
 
     var debit = await db
         .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount<0");
-    //notifyListeners();
 
     return debit[0].values.toString();
   }
 
-  Future getHomePageValues() async {
+  Future getOverViewValues() async {
     var values = new List();
     values.add(await calculateBalance());
-    values.add(await calculateCredit());
-    values.add(await calculateDebit());
+    values.add(await calculateTotalCredit());
+    values.add(await calculateTotalDebit());
+    notifyListeners();
+    return values;
+  }
+
+  Future<String> calculateDailyCredit(String date) async {
+    final Database db = await database;
+
+    var credit = await db.rawQuery(
+        "SELECT SUM(amount) FROM transactions WHERE amount>0 AND date='$date'");
+
+    return credit[0].values.toString();
+  }
+
+  Future<String> calculateDailyDebit(String date) async {
+    final Database db = await database;
+
+    var debit = await db.rawQuery(
+        "SELECT SUM(amount) FROM transactions WHERE amount<0 AND date='$date'");
+
+    return debit[0].values.toString();
+  }
+
+  Future getDailyValues(String date) async {
+    var values = new List();
+    values.add(await calculateBalance());
+    values.add(await calculateDailyCredit(date));
+    values.add(await calculateDailyDebit(date));
     notifyListeners();
     return values;
   }
