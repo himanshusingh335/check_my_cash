@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'Home_Screen_Tabs/OverView.dart';
 import 'Home_Screen_Tabs/Daily.dart';
-import 'Home_Screen_Tabs/Monthly.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -25,7 +24,6 @@ class HomeScreen extends StatelessWidget {
             tabs: <Tab>[
               new Tab(text: 'Overview'),
               new Tab(text: 'Daily'),
-              new Tab(text: 'Monthly'),
             ],
           ),
         ),
@@ -60,13 +58,6 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.history),
-                title: Text('Transaction History'),
-                onTap: () {
-                  Navigator.pushNamed(context, '/history');
-                },
-              ),
-              ListTile(
                 leading: Icon(Icons.info),
                 title: Text('Developer info'),
                 onTap: () {
@@ -79,7 +70,6 @@ class HomeScreen extends StatelessWidget {
         body: new TabBarView(children: <Widget>[
           HSOverView(),
           HSDaily(),
-          HSMonthly(),
         ]),
       ),
     );

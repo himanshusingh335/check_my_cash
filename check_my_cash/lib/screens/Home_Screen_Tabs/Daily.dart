@@ -4,9 +4,11 @@ import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:provider/provider.dart';
 import 'package:check_my_cash/screens/Home_Screen_Tabs/OverView.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
-Future _dailyBalance;
-String _selectedDate;
+Future dailyBalance;
+String selectedDate;
+Future<List> _transactionList;
 
 class HSDaily extends StatefulWidget {
   @override
@@ -17,12 +19,13 @@ class _HSDailyState extends State<HSDaily> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now().day.toString() +
+    selectedDate = DateTime.now().day.toString() +
         '/' +
         DateTime.now().month.toString() +
         '/' +
         DateTime.now().year.toString();
-    _dailyBalance = databaseServices.getDailyValues(_selectedDate);
+    dailyBalance = databaseServices.getDailyValues(selectedDate);
+    _transactionList = databaseServices.getTransactionsByDate(selectedDate);
   }
 
   void didChangeDependencies() {
@@ -38,88 +41,204 @@ class _HSDailyState extends State<HSDaily> {
         DatePicker(
           DateTime.utc(DateTime.now().year),
           initialSelectedDate: DateTime.now(),
-          selectionColor: Colors.black,
+          selectionColor: Colors.green,
           selectedTextColor: Colors.white,
           daysCount: DateTime.now()
-                  .difference(DateTime(
-                      DateTime.now().year, DateTime.january, DateTime.january))
+                  .difference(DateTime(DateTime.now().year,
+                      DateTime.now().month, DateTime.january))
                   .inDays +
               1,
           onDateChange: (date) {
             // New date selected
             setState(() {
-              _selectedDate = date.day.toString() +
+              selectedDate = date.day.toString() +
                   '/' +
                   date.month.toString() +
                   '/' +
                   date.year.toString();
-              _dailyBalance = databaseServices.getDailyValues(_selectedDate);
+              dailyBalance = databaseServices.getDailyValues(selectedDate);
+              _transactionList =
+                  databaseServices.getTransactionsByDate(selectedDate);
             });
           },
         ),
-        Expanded(
-          child: FutureBuilder(
-            future: _dailyBalance,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.done)
-                return ListView(
-                  children: <Widget>[
-                    Card(
-                      color: Colors.white,
-                      elevation: 2.0,
-                      child: ListTile(
-                        title: Text(
-                          'Balance Amount: Rs ' +
-                              snapshot.data[0]
-                                  .toString()
-                                  .replaceAll('(', '')
-                                  .replaceAll(')', ''),
-                          style: TextStyle(
-                            color: Colors.black,
+        FutureBuilder(
+          future: dailyBalance,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.done)
+              return Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(1),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Colors.pink,
+                      elevation: 10,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            title: Center(
+                              child: Text(
+                                'BALANCE: Rs ' +
+                                    snapshot.data[0]
+                                        .toString()
+                                        .replaceAll('(', '')
+                                        .replaceAll(')', ''),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                    Card(
-                      color: Colors.white,
-                      elevation: 2.0,
-                      child: ListTile(
-                        title: Text(
-                          'Credit Amount: Rs ' +
-                              snapshot.data[1]
-                                  .toString()
-                                  .replaceAll('(', '')
-                                  .replaceAll(')', ''),
-                          style: TextStyle(
-                            color: Colors.green,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(1),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Colors.green,
+                      elevation: 10,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            title: Center(
+                              child: Text(
+                                'Credit Amount: Rs ' +
+                                    snapshot.data[1]
+                                        .toString()
+                                        .replaceAll('(', '')
+                                        .replaceAll(')', ''),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                    Card(
-                      color: Colors.white,
-                      elevation: 2.0,
-                      child: ListTile(
-                        title: Text(
-                          'Debit Amount: Rs ' +
-                              snapshot.data[2]
-                                  .toString()
-                                  .replaceAll('(', '')
-                                  .replaceAll(')', ''),
-                          style: TextStyle(
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(1),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Colors.red,
+                      elevation: 10,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            title: Center(
+                              child: Text(
+                                'Debit Amount: Rs ' +
+                                    snapshot.data[2]
+                                        .toString()
+                                        .replaceAll('(', '')
+                                        .replaceAll(')', ''),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            } // By default, show a loading spinner.
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
+        FutureBuilder(
+          future: _transactionList,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData)
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int position) {
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 2.0,
+                        child: ListTile(
+                          title: Text(
+                            'Rs ' +
+                                snapshot.data[position].transactionAmnt
+                                    .toString(),
+                            style: TextStyle(
+                              color: snapshot.data[position].transactionAmnt
+                                      .toString()
+                                      .contains('-')
+                                  ? Colors.red
+                                  : Colors.green,
+                            ),
+                          ),
+                          subtitle:
+                              Text(snapshot.data[position].reason.toString()),
+                          trailing: Text(snapshot.data[position].transactionDate
+                              .toString()),
+                        ),
+                      ),
+                      actions: <Widget>[
+                        IconSlideAction(
+                            caption: 'Delete',
                             color: Colors.red,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              } // By default, show a loading spinner.
-              return Center(child: CircularProgressIndicator());
-            },
-          ),
+                            icon: Icons.delete,
+                            onTap: () {
+                              databaseServices.deleteTransaction(int.parse(
+                                  snapshot.data[position].id.toString()));
+                              setState(() {
+                                _transactionList = databaseServices
+                                    .getTransactionsByDate(selectedDate);
+                                dailyBalance = databaseServices
+                                    .getDailyValues(selectedDate);
+                              });
+                            }),
+                      ],
+                      secondaryActions: <Widget>[
+                        IconSlideAction(
+                            caption: 'Delete',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              databaseServices.deleteTransaction(int.parse(
+                                  snapshot.data[position].id.toString()));
+                              setState(() {
+                                _transactionList = databaseServices
+                                    .getTransactionsByDate(selectedDate);
+                                dailyBalance = databaseServices
+                                    .getDailyValues(selectedDate);
+                              });
+                            }),
+                      ],
+                    );
+                  },
+                ),
+              );
+            else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            } // By default, show a loading spinner.
+            return Center(child: CircularProgressIndicator());
+          },
         ),
       ],
     );

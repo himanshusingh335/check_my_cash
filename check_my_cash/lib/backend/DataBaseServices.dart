@@ -110,8 +110,10 @@ class DatabaseServices extends ChangeNotifier {
     final Database db = await database;
 
     var balance = await db.rawQuery("SELECT SUM(amount) FROM transactions");
-
-    return balance[0].values.toString();
+    if (balance[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return balance[0].values.toString();
   }
 
   Future<String> calculateTotalCredit() async {
@@ -119,8 +121,10 @@ class DatabaseServices extends ChangeNotifier {
 
     var credit = await db
         .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount>0");
-
-    return credit[0].values.toString();
+    if (credit[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return credit[0].values.toString();
   }
 
   Future<String> calculateTotalDebit() async {
@@ -128,8 +132,32 @@ class DatabaseServices extends ChangeNotifier {
 
     var debit = await db
         .rawQuery("SELECT SUM(amount) FROM transactions WHERE amount<0");
+    if (debit[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return debit[0].values.toString();
+  }
 
-    return debit[0].values.toString();
+  Future<String> calculateMonthlyCredit(String date) async {
+    final Database db = await database;
+
+    var credit = await db.rawQuery(
+        "SELECT SUM(amount) FROM transactions WHERE amount>0 AND date LIKE '%$date'");
+    if (credit[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return credit[0].values.toString();
+  }
+
+  Future<String> calculateMonthlyDebit(String date) async {
+    final Database db = await database;
+
+    var debit = await db.rawQuery(
+        "SELECT SUM(amount) FROM transactions WHERE amount<0 AND date LIKE '%$date'");
+    if (debit[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return debit[0].values.toString();
   }
 
   Future getOverViewValues() async {
@@ -137,6 +165,20 @@ class DatabaseServices extends ChangeNotifier {
     values.add(await calculateBalance());
     values.add(await calculateTotalCredit());
     values.add(await calculateTotalDebit());
+    values.add(await calculateMonthlyCredit(DateTime.now().month.toString() +
+        '/' +
+        DateTime.now().year.toString()));
+    values.add(await calculateMonthlyDebit(DateTime.now().month.toString() +
+        '/' +
+        DateTime.now().year.toString()));
+    values.add(await calculateMonthlyCredit(
+        (DateTime.now().month - 1).toString() +
+            '/' +
+            DateTime.now().year.toString()));
+    values.add(await calculateMonthlyDebit(
+        (DateTime.now().month - 1).toString() +
+            '/' +
+            DateTime.now().year.toString()));
     notifyListeners();
     return values;
   }
@@ -146,8 +188,10 @@ class DatabaseServices extends ChangeNotifier {
 
     var credit = await db.rawQuery(
         "SELECT SUM(amount) FROM transactions WHERE amount>0 AND date='$date'");
-
-    return credit[0].values.toString();
+    if (credit[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return credit[0].values.toString();
   }
 
   Future<String> calculateDailyDebit(String date) async {
@@ -155,8 +199,10 @@ class DatabaseServices extends ChangeNotifier {
 
     var debit = await db.rawQuery(
         "SELECT SUM(amount) FROM transactions WHERE amount<0 AND date='$date'");
-
-    return debit[0].values.toString();
+    if (debit[0].values.toString() == '(null)') {
+      return '0.00';
+    } else
+      return debit[0].values.toString();
   }
 
   Future getDailyValues(String date) async {
