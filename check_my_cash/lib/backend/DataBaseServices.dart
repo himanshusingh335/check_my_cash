@@ -67,6 +67,7 @@ class DatabaseServices extends ChangeNotifier {
     final List<Map<String, dynamic>> maps =
         await db.rawQuery("SELECT * FROM transactions WHERE date='$date'");
     // Convert the List<Map<String, dynamic> into a List<Transactions>.
+    notifyListeners();
     return List.generate(maps.length, (i) {
       return Transactions(
         id: maps[i]['id'],

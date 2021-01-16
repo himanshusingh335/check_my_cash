@@ -8,7 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 Future dailyBalance;
 String selectedDate;
-Future<List> _transactionList;
+Future<List> transactionList;
 
 class HSDaily extends StatefulWidget {
   @override
@@ -25,7 +25,7 @@ class _HSDailyState extends State<HSDaily> {
         '/' +
         DateTime.now().year.toString();
     dailyBalance = databaseServices.getDailyValues(selectedDate);
-    _transactionList = databaseServices.getTransactionsByDate(selectedDate);
+    transactionList = databaseServices.getTransactionsByDate(selectedDate);
   }
 
   void didChangeDependencies() {
@@ -57,7 +57,7 @@ class _HSDailyState extends State<HSDaily> {
                   '/' +
                   date.year.toString();
               dailyBalance = databaseServices.getDailyValues(selectedDate);
-              _transactionList =
+              transactionList =
                   databaseServices.getTransactionsByDate(selectedDate);
             });
           },
@@ -166,7 +166,7 @@ class _HSDailyState extends State<HSDaily> {
           },
         ),
         FutureBuilder(
-          future: _transactionList,
+          future: transactionList,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData)
               return Expanded(
@@ -207,7 +207,7 @@ class _HSDailyState extends State<HSDaily> {
                               databaseServices.deleteTransaction(int.parse(
                                   snapshot.data[position].id.toString()));
                               setState(() {
-                                _transactionList = databaseServices
+                                transactionList = databaseServices
                                     .getTransactionsByDate(selectedDate);
                                 dailyBalance = databaseServices
                                     .getDailyValues(selectedDate);
@@ -223,7 +223,7 @@ class _HSDailyState extends State<HSDaily> {
                               databaseServices.deleteTransaction(int.parse(
                                   snapshot.data[position].id.toString()));
                               setState(() {
-                                _transactionList = databaseServices
+                                transactionList = databaseServices
                                     .getTransactionsByDate(selectedDate);
                                 dailyBalance = databaseServices
                                     .getDailyValues(selectedDate);

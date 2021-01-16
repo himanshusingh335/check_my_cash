@@ -134,6 +134,8 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
                 databaseServices.addTransaction(transaction);
                 balance = updateBalance.getOverViewValues();
                 dailyBalance = updateBalance.getDailyValues(selectedDate);
+                transactionList =
+                    updateBalance.getTransactionsByDate(selectedDate);
                 _amount.text = "";
                 _reason.text = "";
                 Navigator.pop(context);
