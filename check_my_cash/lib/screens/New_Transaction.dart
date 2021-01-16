@@ -1,11 +1,12 @@
+import 'package:check_my_cash/screens/Home_Screen_Tabs/Daily.dart';
 import 'package:flutter/material.dart';
 import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/backend/transactions.dart';
 import 'Home_Screen_Tabs/OverView.dart';
 
 var databaseServices = new DatabaseServices();
-TextEditingController amount;
-TextEditingController reason;
+TextEditingController _amount;
+TextEditingController _reason;
 enum TransactionType { debit, credit }
 TransactionType transactionType = TransactionType.debit;
 
@@ -18,8 +19,8 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
   @override
   void initState() {
     super.initState();
-    amount = new TextEditingController();
-    reason = new TextEditingController();
+    _amount = new TextEditingController();
+    _reason = new TextEditingController();
   }
 
   @override
@@ -82,7 +83,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
               left: 10,
             ),
             child: TextField(
-              controller: amount,
+              controller: _amount,
               decoration: InputDecoration(
                 hintText: 'Enter Amount',
                 labelText: 'Amount Spent',
@@ -100,7 +101,7 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
               left: 10,
             ),
             child: TextField(
-              controller: reason,
+              controller: _reason,
               decoration: InputDecoration(
                 hintText: '  Enter reason',
                 labelText: '  Reason',
@@ -122,19 +123,20 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
               onPressed: () {
                 var transaction = new Transactions.withoutid(
                     transactionAmnt: transactionType == TransactionType.debit
-                        ? int.parse('-' + amount.text)
-                        : int.parse(amount.text),
+                        ? int.parse('-' + _amount.text)
+                        : int.parse(_amount.text),
                     transactionDate: DateTime.now().day.toString() +
                         '/' +
                         DateTime.now().month.toString() +
                         '/' +
                         DateTime.now().year.toString(),
-                    reason: reason.text);
+                    reason: _reason.text);
                 databaseServices.addTransaction(transaction);
-                balance = updateBalance.getHomePageValues();
-                amount.text = "";
-                reason.text = "";
-                Navigator.pushNamed(context, '/history');
+                balance = updateBalance.getOverViewValues();
+                dailyBalance = updateBalance.getDailyValues(selectedDate);
+                _amount.text = "";
+                _reason.text = "";
+                Navigator.pop(context);
               }),
         ],
       ),
@@ -143,8 +145,8 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
 
   @override
   void dispose() {
-    amount.dispose();
-    reason.dispose();
+    _amount.dispose();
+    _reason.dispose();
     super.dispose();
   }
 }
