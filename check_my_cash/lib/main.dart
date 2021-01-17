@@ -1,6 +1,5 @@
 import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/screens/Home_Screen.dart';
-import 'package:check_my_cash/screens/Home_Screen_Tabs/Daily.dart';
 import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'package:check_my_cash/screens/settings.dart';
 import 'package:flutter/material.dart';

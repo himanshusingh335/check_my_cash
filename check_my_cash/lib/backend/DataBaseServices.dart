@@ -107,6 +107,17 @@ class DatabaseServices extends ChangeNotifier {
     );
   }
 
+  Future<void> deleteAllTransactions() async {
+    // Get a reference to the database.
+    final Database db = await database;
+
+    // Remove the Transaction from the Database.
+    await db.delete(
+      'transactions',
+    );
+    notifyListeners();
+  }
+
   Future<String> calculateBalance() async {
     final Database db = await database;
 
