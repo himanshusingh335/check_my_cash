@@ -29,7 +29,7 @@ class _HSOverViewState extends State<HSOverView> {
       future: balance,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done)
-          return Column(
+          return ListView(
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(1),

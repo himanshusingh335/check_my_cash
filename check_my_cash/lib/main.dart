@@ -19,12 +19,6 @@ class CheckMyCash extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => DatabaseServices(),
       child: MaterialApp(
-        theme: ThemeData(
-          brightness: Brightness.light,
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-        ),
         title: "Check My Cash",
         initialRoute: '/home',
         routes: {

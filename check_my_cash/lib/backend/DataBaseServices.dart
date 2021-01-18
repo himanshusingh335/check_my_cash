@@ -17,7 +17,7 @@ class DatabaseServices extends ChangeNotifier {
 
   Future<Database> initializeDb() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = dir.path + "transactions_table.db";
+    String path = dir.path + "/transactions_table.db";
     _database = await openDatabase(path, version: 1, onCreate: createDb);
     return _database;
   }
