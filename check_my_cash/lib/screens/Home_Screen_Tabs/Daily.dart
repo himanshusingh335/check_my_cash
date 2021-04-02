@@ -39,7 +39,7 @@ class _HSDailyState extends State<HSDaily> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         DatePicker(
-          DateTime.utc(DateTime.now().year),
+          DateTime.utc(DateTime.now().year, DateTime.now().month),
           initialSelectedDate: DateTime.now(),
           selectionColor: Colors.green,
           selectedTextColor: Colors.white,
