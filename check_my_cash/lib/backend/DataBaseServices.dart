@@ -173,7 +173,7 @@ class DatabaseServices extends ChangeNotifier {
   }
 
   Future getOverViewValues() async {
-    var values = new List();
+    var values = [];
     values.add(await calculateBalance());
     values.add(await calculateTotalCredit());
     values.add(await calculateTotalDebit());
@@ -218,7 +218,7 @@ class DatabaseServices extends ChangeNotifier {
   }
 
   Future getDailyValues(String date) async {
-    var values = new List();
+    var values = [];
     values.add(await calculateBalance());
     values.add(await calculateDailyCredit(date));
     values.add(await calculateDailyDebit(date));

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:check_my_cash/backend/DataBaseServices.dart';
-import 'package:check_my_cash/screens/New_Transaction.dart';
 import 'Home_Screen_Tabs/Daily.dart';
 import 'package:check_my_cash/screens/Home_Screen_Tabs/OverView.dart';
 
@@ -30,13 +28,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             'Delete all Data:    ',
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          RaisedButton(
-              color: Colors.red,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(50.0),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+                onPrimary: Colors.white,
               ),
-              elevation: 5,
               child: Text("DELETE ALL"),
               onPressed: () {
                 updateBalance.deleteAllTransactions();
