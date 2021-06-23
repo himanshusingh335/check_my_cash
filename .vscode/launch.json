@@ -6,7 +6,6 @@
     "configurations": [
         {
             "name": "check_my_cash",
-            "cwd": "check_my_cash",
             "request": "launch",
             "type": "dart"
         }
