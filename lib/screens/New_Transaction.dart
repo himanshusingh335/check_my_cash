@@ -112,13 +112,11 @@ class _NewTransactionScreenState extends State<NewTransactionScreen> {
               keyboardType: TextInputType.text,
             ),
           ),
-          RaisedButton(
-              color: Colors.green,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(50.0),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+                onPrimary: Colors.white,
               ),
-              elevation: 5,
               child: Text("ADD"),
               onPressed: () {
                 var transaction = new Transactions.withoutid(
