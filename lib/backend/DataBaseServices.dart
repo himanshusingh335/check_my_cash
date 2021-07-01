@@ -42,23 +42,6 @@ class DatabaseServices extends ChangeNotifier {
     );
   }
 
-  /*Future<List<Transactions>> getTransactions() async {
-    // Get a reference to the database.
-    final Database db = await database;
-
-    // Query the table for all The Transactions.
-    final List<Map<String, dynamic>> maps = await db.query('transactions');
-    // Convert the List<Map<String, dynamic> into a List<Transactions>.
-    return List.generate(maps.length, (i) {
-      return Transactions(
-        id: maps[i]['id'],
-        transactionDate: maps[i]['date'],
-        transactionAmnt: maps[i]['amount'],
-        reason: maps[i]['reason'],
-      );
-    });
-  }*/
-
   Future<List<Transactions>> getTransactionsByDate(String date) async {
     // Get a reference to the database.
     final Database db = await database;
@@ -77,21 +60,6 @@ class DatabaseServices extends ChangeNotifier {
       );
     });
   }
-
-  /*Future<void> updateTransaction(Transactions transaction) async {
-    // Get a reference to the database.
-    final Database db = await database;
-
-    // Update the given Transaction.
-    await db.update(
-      'transactions',
-      transaction.toMap(),
-      // Ensure that the Transaction has a matching id.
-      where: "id = ?",
-      // Pass the Transaction's id as a whereArg to prevent SQL injection.
-      whereArgs: [transaction.id],
-    );
-  }*/
 
   Future<void> deleteTransaction(int id) async {
     // Get a reference to the database.
