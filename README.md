@@ -1,7 +1,5 @@
-<br>
-<p align="left">
-CHECK MY CASH
-</p>
+# CHECK MY CASH
+
 <p align="left">
 crafted with <span style="color: #8b0000;">&hearts;</span> by Himanshu Singh
 </p>
