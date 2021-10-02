@@ -1,3 +1,4 @@
+import 'package:check_my_cash/screens/widgets/card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/screens/New_Transaction.dart';
@@ -34,126 +35,57 @@ class _HSDailyState extends State<HSDaily> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        DatePicker(
-          DateTime.utc(DateTime.now().year, DateTime.now().month),
-          initialSelectedDate: DateTime.now(),
-          selectionColor: Colors.green,
-          selectedTextColor: Colors.white,
-          daysCount: DateTime.now()
-                  .difference(DateTime(DateTime.now().year,
-                      DateTime.now().month, DateTime.january))
-                  .inDays +
-              1,
-          onDateChange: (date) {
-            // New date selected
-            setState(() {
-              selectedDate = date.day.toString() +
-                  '/' +
-                  date.month.toString() +
-                  '/' +
-                  date.year.toString();
-              dailyBalance = databaseServices.getDailyValues(selectedDate);
-              transactionList =
-                  databaseServices.getTransactionsByDate(selectedDate);
-            });
-          },
+        Padding(
+          padding: EdgeInsets.only(top: 5),
+          child: DatePicker(
+            DateTime.utc(DateTime.now().year, DateTime.now().month),
+            initialSelectedDate: DateTime.now(),
+            selectionColor: Colors.green,
+            selectedTextColor: Colors.white,
+            daysCount: DateTime.now()
+                    .difference(DateTime(DateTime.now().year,
+                        DateTime.now().month, DateTime.january))
+                    .inDays +
+                1,
+            onDateChange: (date) {
+              // New date selected
+              setState(() {
+                selectedDate = date.day.toString() +
+                    '/' +
+                    date.month.toString() +
+                    '/' +
+                    date.year.toString();
+                dailyBalance = databaseServices.getDailyValues(selectedDate);
+                transactionList =
+                    databaseServices.getTransactionsByDate(selectedDate);
+              });
+            },
+          ),
         ),
         FutureBuilder(
           future: dailyBalance,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.done)
-              return Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(1),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      color: Colors.pink,
-                      elevation: 10,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            title: Center(
-                              child: Text(
-                                'BALANCE: Rs ' +
-                                    snapshot.data[0]
-                                        .toString()
-                                        .replaceAll('(', '')
-                                        .replaceAll(')', ''),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: <Widget>[
+                    CardItem(
+                      color: Colors.pink, 
+                      isBold: true,
+                      fontSize: 25,
+                      text: "BALANCE: Rs ${snapshot.data[0].toString().replaceAll('(', '').replaceAll(')', '')}",
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(1),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      color: Colors.green,
-                      elevation: 10,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            title: Center(
-                              child: Text(
-                                'Credit Amount: Rs ' +
-                                    snapshot.data[1]
-                                        .toString()
-                                        .replaceAll('(', '')
-                                        .replaceAll(')', ''),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    CardItem(
+                      color: Colors.green, 
+                      text: "Credit Amount: Rs ${snapshot.data[1].toString().replaceAll('(', '').replaceAll(')', '')}",
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(1),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      color: Colors.red,
-                      elevation: 10,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            title: Center(
-                              child: Text(
-                                'Debit Amount: Rs ' +
-                                    snapshot.data[2]
-                                        .toString()
-                                        .replaceAll('(', '')
-                                        .replaceAll(')', ''),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    CardItem(
+                      color: Colors.red, 
+                      text: "Debit Amount: Rs ${snapshot.data[2].toString().replaceAll('(', '').replaceAll(')', '')}",
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             else if (snapshot.hasError) {
               return Text("${snapshot.error}");

@@ -1,3 +1,4 @@
+import 'package:check_my_cash/screens/widgets/card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:check_my_cash/backend/DataBaseServices.dart';
 import 'package:check_my_cash/screens/New_Transaction.dart';
@@ -25,250 +26,228 @@ class _HSOverViewState extends State<HSOverView> {
       future: balance,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done)
-          return ListView(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: CardItem(
+                    color: Colors.pink, 
+                    text: "BALANCE: Rs ${snapshot.data[0].toString().replaceAll('(', '').replaceAll(')', '')}",
+                    fontSize: 25,
+                    isBold: true,
                   ),
-                  color: Colors.pink,
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
+                ),
+                
+                Container(
+                  child: Text(
+                    'Total:',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+
+                CardItem(
+                  color: Colors.lightGreen[400], 
+                  text: "Credit Amount: Rs ${snapshot.data[1].toString().replaceAll('(', '').replaceAll(')', '')}",
+                ),
+                CardItem(
+                  color: Colors.red[400], 
+                  text: "Debit Amount: Rs ${snapshot.data[2].toString().replaceAll('(', '').replaceAll(')', '')}",
+                ),
+
+                FutureBuilder(
+                  future: databaseServices.getSummary(),
+                  builder: (context, snapshot) {
+
+                    if (snapshot.hasData == false) {
+                      return SizedBox();
+                    }
+                    final data = snapshot.data;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
                           child: Text(
-                            'BALANCE: Rs ' +
-                                snapshot.data[0]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
+                            'Summary:',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
+                              color: Colors.black,
+                              fontSize: 20,
                             ),
                           ),
+                          alignment: Alignment.centerLeft,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                child: Text(
-                  'Total:',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-                alignment: Alignment.centerLeft,
-              ),
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  color: Colors.lightGreen[400],
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'Credit Amount: Rs ' +
-                                snapshot.data[1]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
+                        CardItem(
+                          color: Colors.green[400], 
+                          text: "",
+                          customChild:  _customSummaryWidget(
+                            minCredit: data[0], 
+                            maxCredit: data[1], 
+                            minDebit: data[2], 
+                            maxDebit: data[3]
+                          )
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  },
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                
+                Container(
+                  child: Text(
+                    'This Month:',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                   ),
-                  color: Colors.red[400],
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'Debit Amount: Rs ' +
-                                snapshot.data[2]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  alignment: Alignment.centerLeft,
                 ),
-              ),
-              Container(
-                child: Text(
-                  'This Month:',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
+                CardItem(
+                  color: Colors.green[300], 
+                  text: "Credit Amount: Rs ${snapshot.data[3].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
-                alignment: Alignment.centerLeft,
-              ),
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  color: Colors.green[300],
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'Credit Amount: Rs ' +
-                                snapshot.data[3]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                CardItem(
+                  color: Colors.red[300], 
+                  text: "Debit Amount: Rs ${snapshot.data[4].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                Container(
+                  child: Text(
+                    'Last Month:',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
                   ),
-                  color: Colors.red[300],
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'Debit Amount: Rs ' +
-                                snapshot.data[4]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  alignment: Alignment.centerLeft,
                 ),
-              ),
-              Container(
-                child: Text(
-                  'Last Month:',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
+                CardItem(
+                  color: Colors.green[100], 
+                  text: "Credit Amount: Rs ${snapshot.data[5].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
-                alignment: Alignment.centerLeft,
-              ),
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  color: Colors.green[100],
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'Credit Amount: Rs ' +
-                                snapshot.data[5]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                CardItem(
+                  color: Colors.red[100], 
+                  text: "Debit Amount: Rs ${snapshot.data[6].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  color: Colors.red[100],
-                  elevation: 10,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'Debit Amount: Rs ' +
-                                snapshot.data[6]
-                                    .toString()
-                                    .replaceAll('(', '')
-                                    .replaceAll(')', ''),
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           );
         else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         } // By default, show a loading spinner.
         return Center(child: CircularProgressIndicator());
       },
+    );
+  }
+
+  Widget _customSummaryWidget({@required double minCredit, @required double maxCredit, @required double minDebit, @required double maxDebit}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Min. Credit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs ${minCredit.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Max. Credit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs ${maxCredit.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+
+          Divider(color: Colors.white),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Min. Debit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs ${minDebit.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Max. Debit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs ${maxDebit.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
