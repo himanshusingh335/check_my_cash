@@ -160,7 +160,6 @@ class DatabaseServices extends ChangeNotifier {
         (DateTime.now().month - 1).toString() +
             '/' +
             DateTime.now().year.toString()));
-    notifyListeners();
     return values;
   }
 
@@ -191,7 +190,6 @@ class DatabaseServices extends ChangeNotifier {
     values.add(await calculateBalance());
     values.add(await calculateDailyCredit(date));
     values.add(await calculateDailyDebit(date));
-    notifyListeners();
     return values;
   }
 }
