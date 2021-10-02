@@ -118,6 +118,54 @@ class DatabaseServices extends ChangeNotifier {
     } else
       return debit[0].values.toString();
   }
+  
+  Future<List> getSummary() async {
+    final minCredit = await _getMinCredit();
+    final maxCredit = await _getMaxCredit();
+    final minDebit = await _getMinDebit();
+    final maxDebit = await _getMaxDebit();
+    return [minCredit, maxCredit, minDebit, maxDebit];
+  }
+
+  Future<double> _getMinCredit() async {
+    final Database db = await database;
+    var debit = await db.rawQuery("SELECT min(amount) FROM transactions WHERE amount > 0");
+    if (debit[0].values.toString() == '(null)') {
+      return 0;
+    } else {
+      return double.parse(debit[0].values.toString().replaceAll('(', '').replaceAll(')', ''));
+    }
+  }
+
+  Future<double> _getMaxCredit() async {
+    final Database db = await database;
+    var debit = await db.rawQuery("SELECT max(amount) FROM transactions WHERE amount > 0");
+    if (debit[0].values.toString() == '(null)') {
+      return 0;
+    } else {
+      return double.parse(debit[0].values.toString().replaceAll('(', '').replaceAll(')', ''));
+    }
+  }
+
+  Future<double> _getMinDebit() async {
+    final Database db = await database;
+    var debit = await db.rawQuery("SELECT max(amount) FROM transactions WHERE amount < 0");
+    if (debit[0].values.toString() == '(null)') {
+      return 0;
+    } else {
+      return double.parse(debit[0].values.toString().replaceAll('(', '').replaceAll(')', ''));
+    }
+  }
+
+  Future<double> _getMaxDebit() async {
+    final Database db = await database;
+    var debit = await db.rawQuery("SELECT min(amount) FROM transactions WHERE amount < 0");
+    if (debit[0].values.toString() == '(null)') {
+      return 0;
+    } else {
+      return double.parse(debit[0].values.toString().replaceAll('(', '').replaceAll(')', ''));
+    }
+  }
 
   Future<String> calculateMonthlyCredit(String date) async {
     final Database db = await database;

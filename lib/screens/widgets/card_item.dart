@@ -5,13 +5,15 @@ class CardItem extends StatelessWidget {
   final String text;
   final bool isBold;
   final double fontSize;
+  final Widget customChild;
 
   const CardItem({
     Key key,
     @required this.color,
     @required this.text,
     this.isBold = false,
-    this.fontSize = 17
+    this.fontSize = 17,
+    this.customChild
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -28,14 +30,16 @@ class CardItem extends StatelessWidget {
           children: <Widget>[
             ListTile(
               title: Center(
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: fontSize,
-                    fontWeight: isBold ? FontWeight.bold : FontWeight.normal
-                  ),
-                ),
+                child: customChild == null
+                  ? Text(
+                      text,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fontSize,
+                        fontWeight: isBold ? FontWeight.bold : FontWeight.normal
+                      ),
+                    )
+                  : customChild,
               ),
             ),
           ],

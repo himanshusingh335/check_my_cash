@@ -59,6 +59,42 @@ class _HSOverViewState extends State<HSOverView> {
                   color: Colors.red[400], 
                   text: "Debit Amount: Rs ${snapshot.data[2].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
+
+                FutureBuilder(
+                  future: databaseServices.getSummary(),
+                  builder: (context, snapshot) {
+
+                    if (snapshot.hasData == false) {
+                      return SizedBox();
+                    }
+                    final data = snapshot.data;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            'Summary:',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
+                          alignment: Alignment.centerLeft,
+                        ),
+                        CardItem(
+                          color: Colors.green[400], 
+                          text: "",
+                          customChild:  _customSummaryWidget(
+                            minCredit: data[0], 
+                            maxCredit: data[1], 
+                            minDebit: data[2], 
+                            maxDebit: data[3]
+                          )
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 
                 Container(
                   child: Text(
@@ -104,6 +140,114 @@ class _HSOverViewState extends State<HSOverView> {
         } // By default, show a loading spinner.
         return Center(child: CircularProgressIndicator());
       },
+    );
+  }
+
+  Widget _customSummaryWidget({@required double minCredit, @required double maxCredit, @required double minDebit, @required double maxDebit}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Min. Credit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs $minCredit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Max. Credit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs $maxCredit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+
+          Divider(color: Colors.white),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Min. Debit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs $minDebit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Max. Debit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Text(
+                      "Rs $maxDebit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
