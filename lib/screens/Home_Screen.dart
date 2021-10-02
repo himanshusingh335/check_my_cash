@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'Home_Screen_Tabs/OverView.dart';
 import 'Home_Screen_Tabs/Daily.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -29,7 +34,9 @@ class HomeScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/new');
+            Navigator.pushNamed(context, '/new').then((value) {
+              setState(() {});
+            });
           },
           child: Icon(Icons.add),
           backgroundColor: Colors.green,
