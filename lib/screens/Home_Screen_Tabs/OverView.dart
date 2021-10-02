@@ -18,13 +18,9 @@ class _HSOverViewState extends State<HSOverView> {
     balance = databaseServices.getOverViewValues();
   }
 
-  void didChangeDependencies() {
-    updateBalance = Provider.of<DatabaseServices>(context);
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
+    updateBalance = Provider.of<DatabaseServices>(context);
     return FutureBuilder(
       future: balance,
       builder: (BuildContext context, AsyncSnapshot snapshot) {

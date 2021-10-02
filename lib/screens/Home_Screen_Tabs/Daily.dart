@@ -28,13 +28,9 @@ class _HSDailyState extends State<HSDaily> {
     transactionList = databaseServices.getTransactionsByDate(selectedDate);
   }
 
-  void didChangeDependencies() {
-    updateBalance = Provider.of<DatabaseServices>(context);
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
+    updateBalance = Provider.of<DatabaseServices>(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
