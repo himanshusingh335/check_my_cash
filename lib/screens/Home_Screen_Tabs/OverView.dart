@@ -163,7 +163,7 @@ class _HSOverViewState extends State<HSOverView> {
                       ),
                     ),
                     Text(
-                      "Rs $minCredit",
+                      "Rs ${minCredit.toStringAsFixed(0)}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -185,7 +185,7 @@ class _HSOverViewState extends State<HSOverView> {
                       ),
                     ),
                     Text(
-                      "Rs $maxCredit",
+                      "Rs ${maxCredit.toStringAsFixed(0)}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -213,7 +213,7 @@ class _HSOverViewState extends State<HSOverView> {
                       ),
                     ),
                     Text(
-                      "Rs $minDebit",
+                      "Rs ${minDebit.toStringAsFixed(0)}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -235,7 +235,7 @@ class _HSOverViewState extends State<HSOverView> {
                       ),
                     ),
                     Text(
-                      "Rs $maxDebit",
+                      "Rs ${maxDebit.toStringAsFixed(0)}",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
