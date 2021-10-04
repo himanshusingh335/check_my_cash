@@ -1,3 +1,4 @@
+import 'package:check_my_cash/screens/widgets/balance_card.dart';
 import 'package:check_my_cash/screens/widgets/card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:check_my_cash/backend/DataBaseServices.dart';
@@ -30,16 +31,9 @@ class _HSOverViewState extends State<HSOverView> {
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: ListView(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: CardItem(
-                    color: Colors.pink, 
-                    text: "BALANCE: Rs ${snapshot.data[0].toString().replaceAll('(', '').replaceAll(')', '')}",
-                    fontSize: 25,
-                    isBold: true,
-                  ),
-                ),
-                
+                balanceCard(
+                    total:
+                        "Rs ${snapshot.data[0].toString().replaceAll('(', '').replaceAll(')', '')}"),
                 Container(
                   child: Text(
                     'Total:',
@@ -50,20 +44,19 @@ class _HSOverViewState extends State<HSOverView> {
                   ),
                   alignment: Alignment.centerLeft,
                 ),
-
                 CardItem(
-                  color: Colors.lightGreen[400], 
-                  text: "Credit Amount: Rs ${snapshot.data[1].toString().replaceAll('(', '').replaceAll(')', '')}",
+                  color: Colors.lightGreen[400],
+                  text:
+                      "Credit Amount: Rs ${snapshot.data[1].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
                 CardItem(
-                  color: Colors.red[400], 
-                  text: "Debit Amount: Rs ${snapshot.data[2].toString().replaceAll('(', '').replaceAll(')', '')}",
+                  color: Colors.red[400],
+                  text:
+                      "Debit Amount: Rs ${snapshot.data[2].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
-
                 FutureBuilder(
                   future: databaseServices.getSummary(),
                   builder: (context, snapshot) {
-
                     if (snapshot.hasData == false) {
                       return SizedBox();
                     }
@@ -82,20 +75,17 @@ class _HSOverViewState extends State<HSOverView> {
                           alignment: Alignment.centerLeft,
                         ),
                         CardItem(
-                          color: Colors.green[400], 
-                          text: "",
-                          customChild:  _customSummaryWidget(
-                            minCredit: data[0], 
-                            maxCredit: data[1], 
-                            minDebit: data[2], 
-                            maxDebit: data[3]
-                          )
-                        ),
+                            color: Colors.green[400],
+                            text: "",
+                            customChild: _customSummaryWidget(
+                                minCredit: data[0],
+                                maxCredit: data[1],
+                                minDebit: data[2],
+                                maxDebit: data[3])),
                       ],
                     );
                   },
                 ),
-                
                 Container(
                   child: Text(
                     'This Month:',
@@ -107,12 +97,14 @@ class _HSOverViewState extends State<HSOverView> {
                   alignment: Alignment.centerLeft,
                 ),
                 CardItem(
-                  color: Colors.green[300], 
-                  text: "Credit Amount: Rs ${snapshot.data[3].toString().replaceAll('(', '').replaceAll(')', '')}",
+                  color: Colors.green[300],
+                  text:
+                      "Credit Amount: Rs ${snapshot.data[3].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
                 CardItem(
-                  color: Colors.red[300], 
-                  text: "Debit Amount: Rs ${snapshot.data[4].toString().replaceAll('(', '').replaceAll(')', '')}",
+                  color: Colors.red[300],
+                  text:
+                      "Debit Amount: Rs ${snapshot.data[4].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
                 Container(
                   child: Text(
@@ -125,12 +117,14 @@ class _HSOverViewState extends State<HSOverView> {
                   alignment: Alignment.centerLeft,
                 ),
                 CardItem(
-                  color: Colors.green[100], 
-                  text: "Credit Amount: Rs ${snapshot.data[5].toString().replaceAll('(', '').replaceAll(')', '')}",
+                  color: Colors.green[100],
+                  text:
+                      "Credit Amount: Rs ${snapshot.data[5].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
                 CardItem(
-                  color: Colors.red[100], 
-                  text: "Debit Amount: Rs ${snapshot.data[6].toString().replaceAll('(', '').replaceAll(')', '')}",
+                  color: Colors.red[100],
+                  text:
+                      "Debit Amount: Rs ${snapshot.data[6].toString().replaceAll('(', '').replaceAll(')', '')}",
                 ),
               ],
             ),
@@ -143,7 +137,11 @@ class _HSOverViewState extends State<HSOverView> {
     );
   }
 
-  Widget _customSummaryWidget({@required double minCredit, @required double maxCredit, @required double minDebit, @required double maxDebit}) {
+  Widget _customSummaryWidget(
+      {@required double minCredit,
+      @required double maxCredit,
+      @required double minDebit,
+      @required double maxDebit}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -157,10 +155,9 @@ class _HSOverViewState extends State<HSOverView> {
                     Text(
                       "Min. Credit",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Rs ${minCredit.toStringAsFixed(0)}",
@@ -179,10 +176,9 @@ class _HSOverViewState extends State<HSOverView> {
                     Text(
                       "Max. Credit",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Rs ${maxCredit.toStringAsFixed(0)}",
@@ -196,7 +192,6 @@ class _HSOverViewState extends State<HSOverView> {
               )
             ],
           ),
-
           Divider(color: Colors.white),
           Row(
             children: [
@@ -207,10 +202,9 @@ class _HSOverViewState extends State<HSOverView> {
                     Text(
                       "Min. Debit",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Rs ${minDebit.toStringAsFixed(0)}",
@@ -229,10 +223,9 @@ class _HSOverViewState extends State<HSOverView> {
                     Text(
                       "Max. Debit",
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Rs ${maxDebit.toStringAsFixed(0)}",
