@@ -24,7 +24,7 @@ class CardItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
         color: color,
-        elevation: 10,
+        elevation: 4,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
